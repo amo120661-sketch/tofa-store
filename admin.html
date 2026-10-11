@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة التحكم - متجر تُوفا</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="assets/logo.jpeg" />
+</head>
+<body class="admin-body">
+
+  <!-- شاشة الدخول -->
+  <div class="login-wrap" id="loginScreen">
+    <form class="login-card" id="loginForm">
+      <img src="assets/logo.jpeg" alt="logo" />
+      <h2>لوحة تحكم المتجر</h2>
+      <p class="sub">سجّل الدخول لإدارة المنتجات والإعدادات</p>
+      <div class="login-error" id="loginError"></div>
+      <div class="field">
+        <label>اسم المستخدم</label>
+        <input type="text" id="user" placeholder="اسم المستخدم" autocomplete="username" />
+      </div>
+      <div class="field">
+        <label>كلمة المرور</label>
+        <input type="password" id="pass" placeholder="كلمة المرور" autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">تسجيل الدخول</button>
+      <p style="margin-top:14px"><a href="index.html" style="color:#6b7280;font-size:14px">← العودة إلى المتجر</a></p>
+    </form>
+  </div>
+
+  <!-- لوحة التحكم -->
+  <div id="adminApp" class="hidden">
+    <div class="admin-top">
+      <div class="container">
+        <div class="logo"><img id="aLogo" src="assets/logo.jpeg" alt="logo" /><span id="aName">تُوفا</span></div>
+        <div class="spacer"></div>
+        <a href="index.html" target="_blank" class="btn btn-outline btn-sm">👁️ عرض المتجر</a>
+        <button class="btn btn-dark btn-sm" id="logoutBtn">خروج</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="admin-layout">
+        <!-- القائمة الجانبية -->
+        <aside class="admin-side">
+          <button class="active" data-panel="products">👕 المنتجات</button>
+          <button data-panel="slider">🖼️ السلايدر</button>
+          <button data-panel="settings">⚙️ إعدادات الموقع</button>
+          <button data-panel="contact">📞 بيانات التواصل</button>
+          <button data-panel="backup">💾 نسخ واستعادة</button>
+        </aside>
+
+        <main>
+          <!-- ===== المنتجات ===== -->
+          <section class="panel active" id="panel-products">
+            <div class="panel-card">
+              <h3 id="prodFormTitle">➕ إضافة منتج جديد</h3>
+              <p class="hint">يمكنك رفع صورة من جهازك، أو كتابة مسار الصورة من مجلد motag (مثال: motag/1.jpg).</p>
+              <input type="hidden" id="prodId" />
+              <div class="grid-2">
+                <div class="field"><label>اسم المنتج *</label><input type="text" id="pName" placeholder="مثال: فستان صيفي" /></div>
+                <div class="field"><label>القسم</label><input type="text" id="pCat" placeholder="مثال: فساتين" list="catList" /><datalist id="catList"></datalist></div>
+                <div class="field"><label>السعر *</label><input type="number" id="pPrice" min="0" step="1" placeholder="0" /></div>
+                <div class="field"><label>السعر قبل الخصم</label><input type="number" id="pOld" min="0" step="1" placeholder="اختياري" /></div>
+                <div class="field"><label>شارة (Badge)</label><input type="text" id="pBadge" placeholder="مثال: جديد / خصم" /></div>
+                <div class="field"><label>المقاسات (مفصولة بفاصلة)</label><input type="text" id="pSizes" placeholder="S, M, L, XL" /></div>
+              </div>
+              <div class="field"><label>الوصف</label><textarea id="pDesc" placeholder="وصف مختصر للمنتج"></textarea></div>
+              <div class="grid-2">
+                <div class="field">
+                  <label>صورة المنتج (رفع من الجهاز)</label>
+                  <div class="file-drop" id="prodDrop">📁 اضغط لاختيار صورة<input type="file" id="pFile" accept="image/*" hidden /></div>
+                  <div class="img-preview" id="pPreview"></div>
+                </div>
+                <div class="field">
+                  <label>أو مسار الصورة</label>
+                  <input type="text" id="pImagePath" placeholder="motag/1.jpg" />
+                  <label style="margin-top:12px;display:flex;gap:8px;align-items:center;font-weight:600">
+                    <input type="checkbox" id="pStock" checked style="width:auto" /> متوفر في المخزون
+                  </label>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-primary" id="saveProduct">حفظ المنتج</button>
+                <button class="btn btn-outline" id="cancelProduct">إلغاء</button>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <h3>المنتجات الحالية (<span id="prodCount">0</span>)</h3>
+              <div class="admin-products" id="adminProducts"></div>
+            </div>
+          </section>
+
+          <!-- ===== السلايدر ===== -->
+          <section class="panel" id="panel-slider">
+            <div class="panel-card">
+              <h3>🖼️ صور السلايدر</h3>
+              <p class="hint">أضف عدة صور لتظهر كسلايدر متحرك أعلى الموقع. يمكنك الترتيب أو الحذف.</p>
+              <div class="file-drop" id="slideDrop">📁 اضغط لإضافة صورة للسلايدر<input type="file" id="sFile" accept="image/*" hidden multiple /></div>
+              <div class="field" style="margin-top:12px">
+                <label>أو أضف مسار صورة</label>
+                <div style="display:flex;gap:8px">
+                  <input type="text" id="sPath" placeholder="motag/banner.jpg" />
+                  <button class="btn btn-dark btn-sm" id="addSlidePath">إضافة</button>
+                </div>
+              </div>
+              <div class="slider-admin" id="sliderAdmin" style="margin-top:16px"></div>
+            </div>
+          </section>
+
+          <!-- ===== إعدادات الموقع ===== -->
+          <section class="panel" id="panel-settings">
+            <div class="panel-card">
+              <h3>⚙️ الهوية والإعدادات العامة</h3>
+              <div class="grid-2">
+                <div class="field"><label>اسم المتجر</label><input type="text" id="sName" /></div>
+                <div class="field"><label>الشعار النصي</label><input type="text" id="sTag" /></div>
+                <div class="field"><label>العملة</label><input type="text" id="sCurrency" placeholder="ج.م" /></div>
+                <div class="field"><label>شريط الإعلان العلوي</label><input type="text" id="sAnnounce" /></div>
+                <div class="field"><label>اللون الأساسي</label><input type="color" id="sPrimary" /></div>
+                <div class="field"><label>اللون الداكن</label><input type="color" id="sDark" /></div>
+              </div>
+              <div class="grid-2">
+                <div class="field">
+                  <label>شعار المتجر</label>
+                  <div class="file-drop" id="logoDrop">📁 تغيير الشعار<input type="file" id="logoFile" accept="image/*" hidden /></div>
+                  <div class="img-preview" id="logoPreview"></div>
+                </div>
+                <div class="field">
+                  <label>صورة البانر (أسفل السلايدر)</label>
+                  <div class="file-drop" id="bannerDrop">📁 تغيير صورة البانر<input type="file" id="bannerFile" accept="image/*" hidden /></div>
+                  <div class="img-preview" id="bannerPreview"></div>
+                </div>
+              </div>
+              <div class="grid-2">
+                <div class="field"><label>عنوان البانر</label><input type="text" id="sBannerTitle" /></div>
+                <div class="field"><label>نص البانر</label><input type="text" id="sBannerText" /></div>
+              </div>
+              <div class="form-actions"><button class="btn btn-primary" id="saveSettings">💾 حفظ الإعدادات</button></div>
+            </div>
+          </section>
+
+          <!-- ===== بيانات التواصل ===== -->
+          <section class="panel" id="panel-contact">
+            <div class="panel-card">
+              <h3>📞 بيانات التواصل والطلب</h3>
+              <p class="hint">رقم الواتساب هو الرقم الذي تصلك عليه الطلبات. اكتبه بصيغة دولية أو محلية (يبدأ بـ 0).</p>
+              <div class="grid-2">
+                <div class="field"><label>عام</label><input type="text" id="cPhone" placeholder="01028484949" /></div>
+                <div class="field"><label>هاتف إضافي</label><input type="text" id="cPhone2" placeholder="اختياري" /></div>
+                <div class="field"><label>رقم واتساب الطلبات</label><input type="text" id="cWhats" placeholder="01028484949" /></div>
+                <div class="field"><label>البريد الإلكتروني</label><input type="email" id="cEmail" placeholder="اختياري" /></div>
+                <div class="field"><label>العنوان</label><input type="text" id="cAddress" placeholder="شارع عدلي يكن" /></div>
+                <div class="field"><label>رابط فيسبوك</label><input type="text" id="cFb" placeholder="اختياري" /></div>
+                <div class="field"><label>رابط انستجرام</label><input type="text" id="cIg" placeholder="اختياري" /></div>
+              </div>
+              <div class="form-actions"><button class="btn btn-primary" id="saveContact">💾 حفظ بيانات التواصل</button></div>
+            </div>
+          </section>
+
+          <!-- ===== النسخ الاحتياطي ===== -->
+          <section class="panel" id="panel-backup">
+            <div class="panel-card">
+              <h3>💾 نسخ واستعادة البيانات</h3>
+              <p class="hint">صدّر كل بيانات المتجر (منتجات، سلايدر، إعدادات) كملف JSON، أو استعدها على أي جهاز.</p>
+              <div class="form-actions">
+                <button class="btn btn-dark" id="exportBtn">⬇️ تصدير نسخة</button>
+                <button class="btn btn-outline" id="importBtn">⬆️ استيراد نسخة</button>
+                <input type="file" id="importFile" accept="application/json,.json" hidden />
+                <button class="btn btn-outline" id="resetBtn" style="color:#c1121f;border-color:#c1121f">↺ استعادة الإعدادات الافتراضية</button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/store.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

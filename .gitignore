@@ -1,0 +1,6 @@
+# أدوات/مؤقتات لا تُرفع
+.playwright-mcp/
+slyd/
+WhatsApp Image*.jpeg
+*.lnk
+Thumbs.db
