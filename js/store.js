@@ -30,7 +30,7 @@ const TOFA = (function () {
   // البيانات الافتراضية عند أول تشغيل (أسعار مؤقتة لحين اعتماد الأسعار النهائية)
   const DEFAULT_DATA = {
     settings: {
-      siteName: "تُوفا",
+      siteName: "طوفا",
       tagline: "أزياء عصرية بلمسة أنيقة",
       logo: "assets/logo.jpeg",
       phone: "01028484949",

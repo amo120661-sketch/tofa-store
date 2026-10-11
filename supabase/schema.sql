@@ -6,7 +6,7 @@
 -- 1) جدول إعدادات الموقع (صف واحد فقط id = 1)
 create table if not exists public.settings (
   id             smallint primary key default 1,
-  site_name      text default 'تُوفا',
+  site_name      text default 'طوفا',
   tagline        text default 'أزياء عصرية بلمسة أنيقة',
   logo           text default '',
   phone          text default '01028484949',
